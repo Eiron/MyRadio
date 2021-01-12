@@ -1,14 +1,22 @@
 <?php
 /**
- * List of iTones_Playlists
- * 
- * @author Lloyd Wallis <lpw@ury.org.uk>
- * @version 20130712
- * @package MyRadio_iTones
+ * List of iTones_Playlists.
  */
 
-CoreUtils::getTemplateObject()->setTemplate('table.twig')
+use MyRadio\iTones\iTones_PlaylistCategory;
+use \MyRadio\MyRadio\CoreUtils;
+use \MyRadio\iTones\iTones_Playlist;
+
+if (isset($_GET['category'])) {
+    $category = (int) $_GET['category'];
+} else {
+    $category = 1;
+}
+
+CoreUtils::getTemplateObject()->setTemplate('iTones/listPlaylists.twig')
         ->addVariable('title', 'Campus Jukebox Playlists')
-        ->addVariable('tabledata', CoreUtils::dataSourceParser(iTones_Playlist::getAlliTonesPlaylists()))
-        ->addVariable('tablescript', 'myury.datatable.default')
+        ->addVariable('tabledata', CoreUtils::dataSourceParser(iTones_Playlist::getAllPlaylistsOfCategory($category)))
+        ->addVariable('tablescript', 'myradio.iTones.listPlaylists')
+        ->addVariable('category', $category)
+        ->addVariable('allCategories', iTones_PlaylistCategory::getAll())
         ->render();

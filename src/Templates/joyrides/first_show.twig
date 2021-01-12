@@ -1,4 +1,4 @@
-<ol id="myury-joyride" class="ui-helper-hidden">
+<ol id="myradio-joyride" class="hidden">
   {% if action == 'myShows' and tabledata is empty %}
   <li>
     <h2>Creating Your First Show</h2>
@@ -90,7 +90,7 @@
       <li>A "URY Day" starts at 7am, so a show at midnight on Friday will be the
         show after 11pm on Friday.</li>
       <li>With the exception of Flagship shows, all Shows last 1 hour.</li>
-      <li>Every day, 9-11am, 12-2pm and 6-8pm are slots for two-hour Flagship shows. Don't apply for a 
+      <li>Every day, 9-11am, 12-2pm and 6-8pm are slots for two-hour Flagship shows. Don't apply for a
       one hour show during these times.</li>
       <li>If you are applying for a time after 8pm, you are in Specialist Music territory. It's best if
       you clear your show with the Head of Music first.</li>
@@ -120,10 +120,10 @@
       <li><strong>Don't pick times that are reserved</strong> like 6-7pm on Wednesday (Newshour) or 2-4pm on Sunday (Speech).</li>
       <li><strong>Do show your capabilities</strong> if applying for a primetime show, especially if you are
       inexperienced. A couple of freshers once complimented their application by sending an audio sample of their show
-      to programming@ury.org.uk. They won Best Entertainment Show at the National Student Radio Awards a year later.</li>
+      to programming@{{ config.email_domain }}. They won Best Entertainment Show at the National Student Radio Awards a year later.</li>
       <li><strong>Don't be over-enthusiastic</strong> and apply more than once. It just causes more work.</li>
     </ul>
   </li>
   {% endif %}
 </ol>
-<script type="text/javascript" src="{{baseurl}}js/myury.joyride.first_show.js"></script>
+<script type="text/javascript" src="{{baseurl}}js/myradio.joyride.first_show.js"></script>

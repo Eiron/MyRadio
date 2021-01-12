@@ -1,3 +1,4 @@
+/* global myradio */
 /**
  * Controls the master server poller. Tabs and plugins can register callback
  * functions and namespaces
@@ -15,7 +16,7 @@ var server = {
    * @param namespace A root array within the JSON response which will
    * trigger callback_func if nonempty
    */
-  register_callback: function(callback_func, namespace) {
+  register_callback: function (callback_func, namespace) {
     server.callbacks[namespace] = callback_func;
   },
   /**
@@ -26,7 +27,7 @@ var server = {
    * @param key The name of the parameter to send to the server
    * @param value The value of the parameter to send to the server
    */
-  register_param: function(key, value) {
+  register_param: function (key, value) {
     server.params[key] = value;
   },
   /**
@@ -34,30 +35,46 @@ var server = {
    * first time it is run. When the request is complete, it will call the
    * required callback functions from plugins.
    */
-  connect: function() {
+  connect: function () {
     $.ajax({
-      url: myury.makeURL('SIS', 'remote'),
-      method: 'POST',
+      url: myradio.makeURL("SIS", "remote"),
+      method: "POST",
       data: server.getQueryString(),
       cache: false,
-      dataType: 'json',
+      dataType: "json",
       //The timeout here is to prevent stack overflow
-      complete: function() {setTimeout('server.connect()', 100);},
-      success: server.handleResponse
+      complete: function () {
+        setTimeout("server.connect()", 100);
+      },
+      success: server.handleResponse,
+      statusCode: {
+        // See SIS/remote.php for why this is necessary
+        400: function () {
+          window.location = myradio.makeURL(
+            "MyRadio",
+            "timeslot",
+            {
+              next: window.location.pathname,
+              message: window.btoa("Your session has expired, please pick a Timeslot to continue.")
+            }
+          );
+        }
+      }
     });
   },
   /**
    * Used by connect, this takes all the current registered server parameters
    * and returns them as a concatenated query string
    */
-  getQueryString: function() {
-    var qString = '';
+  getQueryString: function () {
+    var qString = "";
     var first = true;
     for (var key in server.params) {
       if (!first) {
         qString += "&";
+      } else {
+        first = false;
       }
-      else {first = false;}
       qString += key + "=" + server.params[key];
     }
     return qString;
@@ -67,46 +84,49 @@ var server = {
    * server
    * @param data The JSON object returned from the server
    */
-  handleResponse: function(data) {
+  handleResponse: function (data) {
     for (var namespace in data) {
       //Handle the Debug namespace - log the message
-      if (namespace == 'debug') {
-        for (var message in data[namespace]) {console.log(data[namespace][message]);}
+      if (namespace == "debug") {
+        for (var message in data[namespace]) {
+          console.log(data[namespace][message]);
+        }
         continue;
-      }
-      else if (typeof(server.callbacks[namespace]) != 'undefined') {
-        console.log('Callback for '+namespace+' found');
+      } else if (typeof(server.callbacks[namespace]) != "undefined") {
+        console.log("Callback for "+namespace+" found");
         //This namespace is registered. Execute the callback function
         server.callbacks[namespace](data[namespace]);
       } else {
-        console.log('api.error.client No Callback for namespace '+namespace);
+        console.log("api.error.client No Callback for namespace "+namespace);
       }
     }
   },
   /**
    * Used to set the number of unread events in the page
    */
-  incrementUnreadEvents: function() {
+  incrementUnreadEvents: function () {
     server.unreadEvents++;
     server.updateTitle();
   },
-  decrementUnreadEvents: function() {
+  decrementUnreadEvents: function () {
     server.unreadEvents--;
     server.updateTitle();
   },
   /**
    * Displays the number of unread events in the title
    */
-  updateTitle: function() {
+  updateTitle: function () {
     var prefix = "";
     if (server.unreadEvents !== 0) {
-      prefix = '('+server.unreadEvents+') ';
+      prefix = "("+server.unreadEvents+") ";
     }
-    document.title = prefix+'Studio Information Service';
+    document.title = prefix+"Studio Information Service";
   }
 };
 
 //The timeout give functions time to register
-$(document).ready(function() {
-  setTimeout("server.connect()", 1000);
-});
+$(document).ready(
+  function () {
+    setTimeout("server.connect()", 1000);
+  }
+);

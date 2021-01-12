@@ -1,4 +1,5 @@
 {% extends 'stripe.twig' %}
+{% import 'macros.twig' as MyRadio %}
 {% block head %}
 {{ parent() }}
 <style type='text/css'>
@@ -13,17 +14,32 @@
 {% if allTimeslots == 'on' %}
 <p>
     You are currently listing <strong>all</strong> shows.
-    <a href="{{myury.makeURL(config, 'MyRadio', 'timeslot', {next: next})}}">
+    <a href="{{MyRadio.makeURL(config, 'MyRadio', 'timeslot', {next: next})}}">
         Click here to only see your shows</a>.
 </p>
 {% elseif allTimeslots == 'off' %}
 <p>
     You are currently listing <strong>your</strong> shows.
-    <a href="{{myury.makeURL(config, 'MyRadio', 'timeslot', {next: next, all: true})}}">
+    <a href="{{MyRadio.makeURL(config, 'MyRadio', 'timeslot', {next: next, all: true})}}">
         Click here to see all shows</a>.
 </p>
 {% endif %}
-<form action='{{myury.makeURL(config,"MyRadio","timeslot")}}' method='post'>
+{% if allTimeslots != 'unavailable' and currentAvaliable %}
+<p>
+    <a href="{{MyRadio.makeURL(config, 'MyRadio', 'timeslot', {next: next, current: true})}}">
+        Click here to load the current show</a>.
+</p>
+{% endif %}
+<hr />
+{% if timeslots is empty %}
+<p>
+    <strong>
+        You haven't got any timeslots, you need to schedule your show first! To do this, go to
+        the <a href="{{MyRadio.makeURL(config, 'Scheduler', 'editShow')}}" title="Create a show">Create New Show</a> page.
+    </strong>
+</p>
+{% else %}
+<form action='{{MyRadio.makeURL(config,"MyRadio","timeslot")}}' method='post'>
     <fieldset class="timeslot">
         <select id="shows" size="20">
             {% for show in timeslots|keys %}
@@ -37,14 +53,16 @@
     <fieldset id="signin-list">
 
     </fieldset>
-    <input type="submit" id="signin-submit" value="Continue" class="ui-helper-hidden" />
+    <input type="submit" id="signin-submit" value="Continue" class="btn btn-primary hidden" />
 </form>
+{% endif %}
 {% endblock %}
 {% block foot %}
 {{ parent() }}
 <script type='text/javascript'>
-    window.showdata = {{timeslots|json_encode|raw}};
-    window.memberid = {{memberid}};
+    window.myradio.showdata = {{timeslots|json_encode|raw}};
+    window.myradio.locations = {{locations|json_encode|raw}};
 </script>
+<script type="text/javascript" src="{{baseurl}}js/vendor/moment.min.js"></script>
 <script type='text/javascript' src='{{baseurl}}js/myradio.timeslot.js'></script>
 {% endblock %}

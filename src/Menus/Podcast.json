@@ -1,0 +1,20 @@
+{
+    "menu":
+        [
+            {
+                "title": "My Podcasts",
+                "url": "module=Podcast",
+                "description": "View your Podcasts"
+            },
+            {
+                "title": "All Podcasts",
+                "url": "module=Podcast,action=allPodcast",
+                "description": "View all Podcasts"
+            },
+            {
+                "title": "Create Podcast",
+                "url": "module=Podcast,action=editPodcast",
+                "description": "Upload a new Podcast"
+            }
+        ]
+}

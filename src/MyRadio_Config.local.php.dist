@@ -2,10 +2,11 @@
 /**
  * Configuration specific to a version or too sensitive to be in the main Config
  * go here.
- * 
+ *
  * Make a copy of this file called MyRadio_Config.local.php and edit it as
  * necessary. It will then override settings in the Config class.
  */
+use \MyRadio\Config;
 
 /**
  * String Settings
@@ -15,11 +16,26 @@ Config::$long_name = 'FULL STATION NAME HERE';
 Config::$email_domain = 'EMAIL DOMAIN HERE';
 Config::$founded = 'FOUNDED YEAR HERE';
 Config::$facebook = 'FACEBOOK PAGE ADDRESS HERE (inc https://facebook.com)';
+
+/**
+ * Signup Emails
+ */
+Config::$welcome_email_sender_memberid = null;
 Config::$welcome_email = <<<EOT
+   This is a welcome (sign-up) email. You can use #NAME to get the user's first name.
    
-   This is a welcome email. You can use #NAME to get the user's first name,
-   and include #UNAME and #PASS to tell them their newly created login details.
+   Here you should probably tell people about what they should do next to get started.
    
+   You can set the ($)welcome_email_sender_memberid variable to send this email from/reply to
+   someone important, maybe the head of station, so they can ask questions!
+EOT;
+
+Config::$account_details_email = <<<EOT
+   This is an email to give a newly signed-up member their new login details.
+   You can use #NAME to get the new member's first name.
+   You can use #USER and #PASS to tell them their newly created login details.
+   
+   This email will send from a no-reply email so that user's don't spread their login details.
 EOT;
 
 /**
@@ -39,17 +55,18 @@ Config::$lastfm_api_key = 'YOUR API KEY HERE';
 Config::$lastfm_api_secret = 'YOUR API SECRET HERE';
 
 /**
- * SU API connection settings.
+ * Student Union-relevant settings.
  */
 Config::$yusu_api_key = 'YOUR API KEY HERE';
+Config::$yusu_api_website = 'YOUR YUSU WEB ADDRESS [WHERE THE API WORKS] HERE';
+Config::$yusu_payment_url = 'LINK TO PAYMENT PAGE' // Link to student union society payment page
 
 /**
  * URL Settings
  */
-Config::$base_url = '//ury.org.uk/myury/';
+Config::$base_url = '//ury.org.uk/myradio/';
 Config::$api_uri = '/api/';
 Config::$api_url = '//ury.org.uk/api';
-Config::$shib_url = '//ury.org.uk/portal';
 
 /**
  * Recaptcha Settings
@@ -79,3 +96,4 @@ Config::$d_Playlists_enabled = true;
 Config::$d_Podcast_enabled = true;
 Config::$d_StatsGen_enabled = false;
 Config::$d_Explicit_enabled = false;
+
